@@ -3,6 +3,7 @@
     font-family: "Raleway", sans-serif;
     box-sizing: border-box;
 }
+/* ===== Modo claro (predeterminado) ===== */
 html {
     --color-principal: #8a4b2a;
     --color-secundario: rgb(246, 168, 95);
@@ -10,23 +11,126 @@ html {
     --color-claro: #f6e3d0;
     --color-oscuro: rgb(94, 54, 12);
     --color-boton: #006999;
+
+    --color-texto: #3b2a20;
+    --color-superficie: white;
+    --color-enlace: orangered;
+    --color-menu: var(--color-oscuro);
+    --color-encabezado-fondo: var(--color-secundario);
+    --color-encabezado-texto: var(--color-oscuro);
+    --color-tabla-borde: green;
+    --color-th-texto: #3b2a20;
+    --color-switch-apagado: #8a7a6c;
+    --color-switch-encendido: var(--color-oscuro);
+
     font-size: 16px;
 }
 
+/* ===== Modo oscuro (se activa con el switch) ===== */
+html:has(#interruptor-tema:checked) {
+    color-scheme: dark;
+
+    --color-principal: #f2b27a;
+    --color-secundario: #b86b2d;
+    --color-fondo: #17110e;
+    --color-claro: #33261e;
+    --color-oscuro: #120c09;
+    --color-boton: #0a7fb0;
+
+    --color-texto: #f0e4d8;
+    --color-superficie: #241b16;
+    --color-enlace: #ff9a6b;
+    --color-menu: #1f150f;
+    --color-encabezado-fondo: #2e2018;
+    --color-encabezado-texto: #f6a85f;
+    --color-tabla-borde: #4caf50;
+    --color-th-texto: #120c09;
+    --color-switch-apagado: #5b4a3d;
+    --color-switch-encendido: #f6a85f;
+}
+
+html:has(#interruptor-tema:checked) img {
+    filter: brightness(.9);
+}
+
 body {
-    color: #3b2a20;
+    color: var(--color-texto);
     background-color: var(--color-fondo);
     line-height: 1.5;
     margin: 0;
+    transition: background-color .3s, color .3s;
+}
+
+.encabezado-titulo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px 32px;
+    padding: 20px;
+    background-color: var(--color-encabezado-fondo);
+    transition: background-color .3s;
 }
 
 h1 {
-    color: var(--color-oscuro);
-    background-color: var(--color-secundario);
+    color: var(--color-encabezado-texto);
     text-align: center;
     font-size: 30px;
     margin: 0;
-    padding: 20px;
+    padding: 0;
+}
+
+/* ----- Switch de modo oscuro ----- */
+.switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    color: var(--color-encabezado-texto);
+    font-weight: bold;
+    user-select: none;
+}
+
+.switch input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.deslizador {
+    position: relative;
+    flex-shrink: 0;
+    width: 52px;
+    height: 28px;
+    background-color: var(--color-switch-apagado);
+    border-radius: 28px;
+    transition: background-color .3s;
+}
+
+.deslizador::before {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 22px;
+    height: 22px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform .3s;
+}
+
+.switch input:checked + .deslizador {
+    background-color: var(--color-switch-encendido);
+}
+
+.switch input:checked + .deslizador::before {
+    transform: translateX(24px);
+}
+
+.switch input:focus-visible + .deslizador {
+    outline: 3px solid var(--color-boton);
+    outline-offset: 2px;
 }
 
 h2 {
@@ -40,17 +144,17 @@ h3 {
 }
 
 a {
-    color: orangered;
+    color: var(--color-enlace);
 }
 
 
 .menu {
-    background-color: var(--color-oscuro);
+    background-color: var(--color-menu);
 }
 
 .menu ul {
     list-style-type: none;
-    column-count: 9;
+    column-count: 8;
     column-gap: 0;
     margin: 0;
     padding: 0;
@@ -74,9 +178,10 @@ a {
     width: 90%;
     margin: 40px auto;
     padding: 20px 30px;
-    background-color: white;
+    background-color: var(--color-superficie);
     border: 3px solid var(--color-secundario);
     border-radius: .5rem;
+    transition: background-color .3s;
 }
 
 .caja-inicio {
@@ -216,6 +321,7 @@ tarjeta:hover .foto-producto img {
     --form-border-color: #222;
     --form-textbutton-color: white;
     --form-bgbutton-color: #006999;
+    --form-input-bg: white;
 
     background-color: var(--from-bg-color);
     border: 3px solid var(--form-border-color);
@@ -234,6 +340,15 @@ tarjeta:hover .foto-producto img {
     padding: .5rem;
     border-radius: .25rem;
     color: var(--form-text-color);
+    background-color: var(--form-input-bg);
+}
+
+html:has(#interruptor-tema:checked) .contacto {
+    --form-text-color: #f0e4d8;
+    --from-bg-color: #241b16;
+    --form-border-color: #b86b2d;
+    --form-bgbutton-color: #0a7fb0;
+    --form-input-bg: #33261e;
 }
 
 .contacto>*::placeholder {
@@ -267,15 +382,16 @@ tarjeta:hover .foto-producto img {
     width: 100%;
     font-size: 1.2rem;
     text-align: center;
-    border: medium solid green;
+    border: medium solid var(--color-tabla-borde);
 }
 
 .table, td, th {
-    border: medium solid green;
+    border: medium solid var(--color-tabla-borde);
 }
 
 .table th {
     background-color: var(--color-secundario);
+    color: var(--color-th-texto);
 }
 
 .total {
